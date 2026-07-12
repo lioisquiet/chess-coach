@@ -53,7 +53,7 @@ export const TRAINER_OPENINGS: TrainerOpening[] = [
     name: 'London System',
     eco: 'D02',
     learnerColor: 'w',
-    idea: 'A solid setup: Bf4, e3, c3, Bd3 — the same plan against almost anything.',
+    idea: 'Aim for this setup: d4 first, then Bf4 (before e3!), e3, c3, Bd3 — the same plan against almost anything.',
     line: ['d4', 'd5', 'Nf3', 'Nf6', 'Bf4', 'e6', 'e3', 'c5', 'c3', 'Nc6'],
   },
   {
