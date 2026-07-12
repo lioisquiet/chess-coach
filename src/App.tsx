@@ -1,7 +1,9 @@
 import { CoachPanel } from './components/coach/CoachPanel';
+import { EvalBar } from './components/game/EvalBar';
 import { GameBoard } from './components/game/GameBoard';
 import { GameControls } from './components/game/GameControls';
 import { MoveList } from './components/game/MoveList';
+import { MoveVerdict } from './components/game/MoveVerdict';
 import { useEngine } from './hooks/useEngine';
 import { useGameStore } from './store/gameStore';
 import './App.css';
@@ -43,7 +45,12 @@ export default function App() {
             </span>
           </div>
 
-          <GameBoard />
+          <div className="board-row">
+            <EvalBar />
+            <GameBoard />
+          </div>
+
+          <MoveVerdict />
 
           <div className="pane__sides">
             <span className="side side--you">

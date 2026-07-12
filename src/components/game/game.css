@@ -66,10 +66,60 @@
   font-size: var(--text-lg);
 }
 
-/* Board */
+/* Board + eval bar row */
+.board-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
 .game-board {
-  width: 100%;
+  flex: 1;
   aspect-ratio: 1 / 1;
+}
+
+/* Eval bar */
+.eval-bar {
+  position: relative;
+  width: 20px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background-color: oklch(24% 0.006 70); /* Black's share — literally dark */
+  box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  display: flex;
+  flex-direction: column-reverse; /* white fill anchors to the bottom */
+}
+
+.eval-bar--flipped {
+  flex-direction: column; /* white fill anchors to the top when board is flipped */
+}
+
+.eval-bar__white {
+  width: 100%;
+  background-color: oklch(95% 0.008 85); /* White's share — literally light */
+  transition: height var(--duration-normal) var(--ease-out-expo);
+}
+
+.eval-bar__value {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-1);
+  transform: translateX(-50%);
+  padding: 1px 3px;
+  border-radius: 3px;
+  background-color: var(--color-surface-raised);
+  color: var(--color-ink);
+  font-size: 0.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+}
+
+.eval-bar--flipped .eval-bar__value {
+  bottom: auto;
+  top: var(--space-1);
 }
 
 /* Controls */
@@ -182,4 +232,82 @@
 
 .move-list__ply {
   color: var(--color-ink);
+}
+
+.move-list__mark {
+  margin-left: 1px;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+
+.move-list__mark--good {
+  color: var(--eval-good);
+}
+
+.move-list__mark--warn {
+  color: oklch(62% 0.13 75);
+}
+
+.move-list__mark--bad {
+  color: var(--eval-bad);
+}
+
+/* Move verdict banner */
+.verdict {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-line-strong);
+  background-color: var(--color-surface-raised);
+  font-size: var(--text-sm);
+  animation: verdict-in var(--duration-normal) var(--ease-out-expo) both;
+}
+
+@keyframes verdict-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.verdict--good {
+  border-left-color: var(--eval-good);
+}
+
+.verdict--warn {
+  border-left-color: oklch(62% 0.13 75);
+}
+
+.verdict--bad {
+  border-left-color: var(--eval-bad);
+}
+
+.verdict__label {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.verdict--good .verdict__label {
+  color: var(--eval-good);
+}
+
+.verdict--warn .verdict__label {
+  color: oklch(62% 0.13 75);
+}
+
+.verdict--bad .verdict__label {
+  color: var(--eval-bad);
+}
+
+.verdict__detail {
+  color: var(--color-ink-soft);
 }

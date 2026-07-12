@@ -1,12 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { toCandidates } from '../lib/candidates';
+import { normalizeToWhitePov, pvToSteps } from '../lib/chessUtils';
 import { EngineWorkerClient } from '../lib/engine/engineWorkerClient';
-import type { PvInfo } from '../lib/engine/uciParser';
+import type { EngineScore, PvInfo } from '../lib/engine/uciParser';
+import { useAnalysisStore } from '../store/analysisStore';
 import { useCoachStore } from '../store/coachStore';
 import { useGameStore } from '../store/gameStore';
 
 const COACH_MULTIPV = 5;
 const COACH_DEPTH = 18;
+const ANALYZER_DEPTH = 14;
+
+const sideToMoveOf = (fen: string): 'w' | 'b' => (fen.split(' ')[1] === 'b' ? 'b' : 'w');
 
 /** Maps the 1..8 UI level onto Stockfish skill and a per-move time budget. */
 function levelToSearch(level: number): { skill: number; movetime: number } {
@@ -16,27 +21,80 @@ function levelToSearch(level: number): { skill: number; movetime: number } {
 }
 
 /**
- * Owns the two engine workers for the app's lifetime:
+ * Owns the three engine workers for the app's lifetime:
  *  - opponent: strength-limited, replies when it is the engine's turn
  *  - coach: full strength MultiPV, analyzes only when hints are requested
+ *  - analyzer: evaluates the current position after every ply for the eval bar,
+ *    move-quality feedback, and post-game review
  */
 export function useEngine() {
   const opponentRef = useRef<EngineWorkerClient | null>(null);
   const coachRef = useRef<EngineWorkerClient | null>(null);
+  const analyzerRef = useRef<EngineWorkerClient | null>(null);
 
   useEffect(() => {
     const opponent = new EngineWorkerClient();
     const coach = new EngineWorkerClient();
+    const analyzer = new EngineWorkerClient();
     opponentRef.current = opponent;
     coachRef.current = coach;
+    analyzerRef.current = analyzer;
     coach.setOptions({ MultiPV: COACH_MULTIPV });
 
     return () => {
       opponent.dispose();
       coach.dispose();
+      analyzer.dispose();
       opponentRef.current = null;
       coachRef.current = null;
+      analyzerRef.current = null;
     };
+  }, []);
+
+  // Drive the analyzer: re-evaluate whenever the game position changes.
+  useEffect(() => {
+    let prevFen: string | null = null;
+    let prevPly = 0;
+
+    const analyzePosition = (fen: string, ply: number) => {
+      const analyzer = analyzerRef.current;
+      if (!analyzer) return;
+      const side = sideToMoveOf(fen);
+      let lastBestSan: string | null = null;
+
+      const record = (score: EngineScore) =>
+        useAnalysisStore.getState().recordEval({
+          ply,
+          fen,
+          score: normalizeToWhitePov(score, side),
+          bestMoveSan: lastBestSan,
+        });
+
+      analyzer.analyze(fen, `go depth ${ANALYZER_DEPTH}`, {
+        onInfo: (info) => {
+          if (info.multipv !== 1) return;
+          lastBestSan = pvToSteps(fen, info.pv.slice(0, 1))[0]?.san ?? lastBestSan;
+          record(info.score); // stream so the eval bar tracks live
+        },
+      });
+    };
+
+    const run = () => {
+      const state = useGameStore.getState();
+      if (state.fen === prevFen) return;
+
+      const ply = state.history.length;
+      if (ply < prevPly) useAnalysisStore.getState().truncate(ply);
+      useAnalysisStore.getState().setCurrentPly(ply);
+      analyzePosition(state.fen, ply);
+
+      prevFen = state.fen;
+      prevPly = ply;
+    };
+
+    const unsubscribe = useGameStore.subscribe(run);
+    run(); // evaluate the starting position immediately
+    return unsubscribe;
   }, []);
 
   // Drive the opponent: whenever it becomes the engine's turn, search and play.
