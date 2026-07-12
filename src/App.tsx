@@ -5,6 +5,7 @@ import { GameControls } from './components/game/GameControls';
 import { MoveList } from './components/game/MoveList';
 import { MoveVerdict } from './components/game/MoveVerdict';
 import { OpeningStrip } from './components/game/OpeningStrip';
+import { ReviewPanel } from './components/review/ReviewPanel';
 import { useEngine } from './hooks/useEngine';
 import { useGameStore } from './store/gameStore';
 import './App.css';
@@ -67,7 +68,11 @@ export default function App() {
         </section>
 
         <aside className="pane pane--coach" aria-label="Coach panel">
-          <CoachPanel onRequestHints={requestHints} onStopHints={stopHints} />
+          {gameOverText ? (
+            <ReviewPanel />
+          ) : (
+            <CoachPanel onRequestHints={requestHints} onStopHints={stopHints} />
+          )}
         </aside>
       </main>
     </div>

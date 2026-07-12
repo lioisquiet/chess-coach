@@ -1,6 +1,7 @@
 @import './styles/global.css';
 @import './components/game/game.css';
 @import './components/coach/coach.css';
+@import './components/review/review.css';
 
 .app {
   max-width: 1240px;
