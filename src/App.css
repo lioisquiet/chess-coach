@@ -1,0 +1,131 @@
+@import './styles/global.css';
+@import './components/game/game.css';
+@import './components/coach/coach.css';
+
+.app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.app__masthead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.app__eyebrow {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-ink);
+  font-weight: 600;
+}
+
+.app__title {
+  font-size: var(--text-display);
+  letter-spacing: -0.02em;
+}
+
+.app__tagline {
+  margin: 0;
+  max-width: 26ch;
+  color: var(--color-ink-soft);
+  font-size: var(--text-sm);
+  font-style: italic;
+  font-family: var(--font-display);
+  text-align: right;
+}
+
+.app__panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.pane {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.pane__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.pane__title {
+  font-size: var(--text-xl);
+  letter-spacing: -0.01em;
+}
+
+.turn-pill {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+}
+
+.turn-pill--thinking {
+  background-color: oklch(90% 0.06 85);
+  color: oklch(45% 0.1 70);
+}
+
+.turn-pill--over {
+  background-color: var(--color-line-strong);
+  color: var(--color-ink);
+}
+
+.pane__sides {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+.side {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+}
+
+.side::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line-strong);
+}
+
+.side--you::before {
+  background-color: var(--color-surface-raised);
+}
+
+.side--engine::before {
+  background-color: var(--color-ink);
+}
+
+@media (max-width: 860px) {
+  .app__panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app__tagline {
+    text-align: left;
+  }
+}

@@ -1,0 +1,87 @@
+:root {
+  /* Surfaces — warm paper */
+  --color-bg: oklch(96% 0.012 85);
+  --color-surface: oklch(98.5% 0.008 85);
+  --color-surface-raised: oklch(99.5% 0.006 85);
+  --color-ink: oklch(24% 0.02 60);
+  --color-ink-soft: oklch(45% 0.02 60);
+  --color-ink-faint: oklch(62% 0.015 60);
+  --color-line: oklch(88% 0.012 75);
+  --color-line-strong: oklch(80% 0.015 70);
+
+  /* Accent — deep ink-teal */
+  --color-accent: oklch(52% 0.09 200);
+  --color-accent-soft: oklch(94% 0.03 200);
+  --color-accent-ink: oklch(38% 0.09 200);
+
+  /* Board */
+  --board-light: oklch(90% 0.03 85);
+  --board-dark: oklch(58% 0.055 75);
+
+  /* Semantic eval scale */
+  --eval-good: oklch(56% 0.13 150);
+  --eval-even: oklch(58% 0.015 60);
+  --eval-bad: oklch(56% 0.16 25);
+
+  /* Typography */
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Palatino', 'Georgia', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', 'Menlo', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+  --text-display: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  /* Radius + shadow */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px oklch(30% 0.02 60 / 0.06), 0 1px 3px oklch(30% 0.02 60 / 0.08);
+  --shadow-md: 0 4px 12px oklch(30% 0.02 60 / 0.08), 0 2px 4px oklch(30% 0.02 60 / 0.06);
+  --shadow-lg: 0 12px 32px oklch(30% 0.02 60 / 0.12);
+
+  /* Motion */
+  --duration-fast: 140ms;
+  --duration-normal: 260ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: oklch(22% 0.012 65);
+    --color-surface: oklch(26% 0.014 65);
+    --color-surface-raised: oklch(30% 0.016 65);
+    --color-ink: oklch(92% 0.012 80);
+    --color-ink-soft: oklch(76% 0.014 80);
+    --color-ink-faint: oklch(60% 0.012 80);
+    --color-line: oklch(36% 0.014 65);
+    --color-line-strong: oklch(44% 0.016 65);
+
+    --color-accent: oklch(72% 0.1 200);
+    --color-accent-soft: oklch(34% 0.05 200);
+    --color-accent-ink: oklch(82% 0.09 200);
+
+    --board-light: oklch(62% 0.035 80);
+    --board-dark: oklch(40% 0.05 70);
+
+    --eval-good: oklch(70% 0.14 150);
+    --eval-even: oklch(72% 0.015 80);
+    --eval-bad: oklch(68% 0.16 25);
+
+    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.3);
+    --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.35);
+    --shadow-lg: 0 12px 32px oklch(0% 0 0 / 0.45);
+  }
+}
