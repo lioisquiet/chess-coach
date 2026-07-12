@@ -1,9 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+// Ignore sub-pixel/incidental width changes so the board mounts once at a stable
+// size instead of re-initializing (and dropping the first interaction) when an
+// unrelated reflow — a scrollbar appearing, the eval readout rendering — nudges layout.
+const SIGNIFICANT_DELTA = 2;
 
 /**
- * Tracks the pixel width of a container element via ResizeObserver.
- * react-chessboard v4 needs an explicit boardWidth when it lives inside a
- * grid/flex child whose width is 0 at first measure.
+ * Tracks the pixel width of a container element. react-chessboard v4 needs an
+ * explicit boardWidth when it lives inside a grid/flex child whose width is 0 at
+ * first measure. Measuring in a layout effect commits the width before the first
+ * paint, so the board (and its drag backend) mount before the user can interact.
  */
 export function useContainerWidth<T extends HTMLElement>(): {
   ref: React.RefObject<T | null>;
@@ -12,16 +18,20 @@ export function useContainerWidth<T extends HTMLElement>(): {
   const ref = useRef<T | null>(null);
   const [width, setWidth] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
 
+    const apply = (measured: number) => {
+      const next = Math.floor(measured);
+      setWidth((prev) => (Math.abs(prev - next) >= SIGNIFICANT_DELTA ? next : prev));
+    };
+
+    apply(element.getBoundingClientRect().width);
     const observer = new ResizeObserver((entries) => {
-      const measured = entries[0]?.contentRect.width ?? 0;
-      setWidth(Math.floor(measured));
+      apply(entries[0]?.contentRect.width ?? 0);
     });
     observer.observe(element);
-    setWidth(Math.floor(element.getBoundingClientRect().width));
 
     return () => observer.disconnect();
   }, []);
