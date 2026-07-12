@@ -4,6 +4,7 @@ import { GameBoard } from './components/game/GameBoard';
 import { GameControls } from './components/game/GameControls';
 import { MoveList } from './components/game/MoveList';
 import { MoveVerdict } from './components/game/MoveVerdict';
+import { OpeningStrip } from './components/game/OpeningStrip';
 import { useEngine } from './hooks/useEngine';
 import { useGameStore } from './store/gameStore';
 import './App.css';
@@ -44,6 +45,8 @@ export default function App() {
               {turnLabel}
             </span>
           </div>
+
+          <OpeningStrip />
 
           <div className="board-row">
             <EvalBar />
